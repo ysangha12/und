@@ -68,7 +68,7 @@ socketServer.on('connection', socket => {
     if (message.type === 'action' && client.room) {
       const allowedActions = new Set(['sushi-eat', 'smoke', 'soft-press', 'soft-move', 'soft-release', 'dance']);
       if (!allowedActions.has(message.action)) return;
-      broadcast({ type: 'action', room: client.room, action: message.action, payload: message.payload || {} }, socket);
+      broadcast({ type: 'action', room: client.room, action: message.action, payload: message.payload || {}, name: client.name }, socket);
     }
   });
 
