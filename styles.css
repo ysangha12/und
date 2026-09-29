@@ -1,3 +1,4 @@
+.room-users{position:absolute;left:50%;top:100%;transform:translate(-50%,12px);display:flex;justify-content:center;gap:6px;max-width:min(70vw,360px);flex-wrap:wrap;z-index:2}.room-user{background:#fff;border:1px solid var(--line);padding:5px 9px;color:var(--muted);font-size:10px;font-weight:700;white-space:nowrap}.room-user.is-me{background:var(--lime);border-color:var(--ink);color:var(--ink)}
 .intro p{max-width:300px;word-break:keep-all}
 
 .intro p{max-width:300px;word-break:keep-all}
