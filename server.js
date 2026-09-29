@@ -7,15 +7,21 @@ const port = process.env.PORT || 3000;
 const clients = new Map();
 
 const server = http.createServer((request, response) => {
-  const requestedPath = request.url === '/' ? '/index.html' : request.url;
+  const pathname = new URL(request.url, `http://${request.headers.host}`).pathname;
+  const requestedPath = pathname === '/' ? '/index.html' : pathname;
   const filePath = path.join(__dirname, requestedPath);
   if (!filePath.startsWith(__dirname) || !fs.existsSync(filePath)) {
     response.writeHead(404);
     response.end('Not found');
     return;
   }
+  const contentTypes = {
+    '.html': 'text/html; charset=utf-8',
+    '.css': 'text/css; charset=utf-8',
+    '.js': 'text/javascript; charset=utf-8',
+  };
   const extension = path.extname(filePath);
-  const contentType = extension === '.html' ? 'text/html; charset=utf-8' : 'application/octet-stream';
+  const contentType = contentTypes[extension] || 'application/octet-stream';
   response.writeHead(200, { 'Content-Type': contentType });
   fs.createReadStream(filePath).pipe(response);
 });
@@ -55,7 +61,7 @@ socketServer.on('connection', socket => {
     }
 
     if (message.type === 'chat' && client.room && String(message.text || '').trim()) {
-      broadcast({ type: 'chat', room: client.room, name: client.name, text: String(message.text).slice(0, 300) });
+      broadcast({ type: 'chat', room: client.room, name: client.name, text: String(message.text).slice(0, 300) }, socket);
     }
   });
 
