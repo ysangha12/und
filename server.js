@@ -62,6 +62,13 @@ socketServer.on('connection', socket => {
 
     if (message.type === 'chat' && client.room && String(message.text || '').trim()) {
       broadcast({ type: 'chat', room: client.room, name: client.name, text: String(message.text).slice(0, 300) }, socket);
+      return;
+    }
+
+    if (message.type === 'action' && client.room) {
+      const allowedActions = new Set(['sushi-eat', 'smoke', 'soft-press', 'soft-move', 'soft-release', 'dance']);
+      if (!allowedActions.has(message.action)) return;
+      broadcast({ type: 'action', room: client.room, action: message.action, payload: message.payload || {} }, socket);
     }
   });
 
